@@ -1,18 +1,19 @@
-import UIKit
+import Foundation
 
-//ДЗ
+// ДЗ
 
 
-//1. Написать функции, которая:
-//- Будет просто выводить в консоль ”Hello, world!”.
-//- Будет принимать аргумент “имя” и выводить в консоль “Hello, имя” (вызов функции
-//должен быть следующим - printHi(“Misha”)).
-//- Будет принимать аргумент имя и возвращать строку приветствия “Hello! имя”.
+// 1. Написать функции, которая:
+// - Будет просто выводить в консоль ”Hello, world!”.
+// - Будет принимать аргумент “имя” и выводить в консоль “Hello, имя” (вызов функции
+// должен быть следующим - printHi(“Misha”)).
+// - Будет принимать аргумент имя и возвращать строку приветствия “Hello! имя”.
 
 
 func HelloWorld() {
     print("Hello World")
 }
+
 func printHi(_ name: String) {
     print("Hello, \(name)")
 }
@@ -27,36 +28,40 @@ let greeting = getGreeting(for: "Misha")
 print(greeting)
 
 
-//2. Написать функцию, которая принимает две строки и возвращает сумму количества
-//символов двух строк.
+// 2. Написать функцию, которая принимает две строки и возвращает сумму количества
+// символов двух строк.
 
 func Count(_ num1: String, _ num2: String) -> Int {
     return num1.count + num2.count
 }
+
 let string1 = "Hello"
 let string2 = "World"
 let result = Count(string1, string2)
 print(result)
 
-//3. Написать функцию, которая выводит в консоль квадрат переданного числа.
+// 3. Написать функцию, которая выводит в консоль квадрат переданного числа.
 
 func printSquare(of num: Int) {
     let square = num * num
     print("Квадрат числа \(num) равен \(square)")
 }
+
 printSquare(of: 10)
 
 
 // 4.Функция для вычисления площади круга
 
-func CircleArea(radius: Double) -> Double {
+func circleArea(radius: Double) -> Double {
     return Double.pi * pow(radius, 2)
 }
+
 let radius = 15
 
 //5. Создать функцию, которая принимает логический тип “ночь ли сегодня” и возвращает
 //строку с описанием времени суток. Можно делать с логическим типом, можно делать со временем.
 //
+
 func timeOfDay(currentTime: Date) -> String {
     let calendar = Calendar.current
     let hour = calendar.component(.hour, from: currentTime)
@@ -68,6 +73,7 @@ func timeOfDay(currentTime: Date) -> String {
         return "Сейчас ночь"
     }
 }
+
 let currentTime = Date()
 let description = timeOfDay(currentTime: currentTime)
 print(description)
@@ -102,40 +108,47 @@ print(seasonForMonth(5))
 
 
 enum Currency: String {
-    case USD = "USD"
-    case EUR = "EUR"
-    case BYN = "BYN"
+    case usd = "USD"
+    case eur = "EUR"
+    case byn = "BYN"
 }
 
-func getExchange(from: Currency, to: Currency) -> Double? {
-    let exchange: [String: Double] = [
-        "USD_EUR": 0.83,
-        "USD_BYN": 3.11,
-        "EUR_USD": 1.08,
-        "EUR_BYN": 3.45,
-        "BYN_USD": 0.29,
-        "BYN_EUR": 0.25
-    ]
-    
-    let key = "\(from.rawValue)_\(to.rawValue)"
-    
-    return exchange[key]
+enum Exchange: Double {
+    case usdToEur = 0.83
+    case usdToByn = 3.11
+    case eurToUsd = 1.08
+    case eurToByn = 3.45
+    case bynToUsd = 0.29
+    case bynToEur = 0.25
 }
 
-func convertCurrency(amount: Double, from: Currency, to: Currency) -> Double? {
-    guard let exchange = getExchange(from: from, to: to) else {
-        print("Курс обмена для \(from.rawValue) -> \(to.rawValue) не найден.")
-        return nil
+func getExchange(from: Currency, to: Currency) -> Double {
+    switch (from, to) {
+    case (.usd, .eur):
+        return Exchange.usdToEur.rawValue
+    case (.usd, .byn):
+        return Exchange.usdToByn.rawValue
+    case (.eur, .usd):
+        return Exchange.eurToUsd.rawValue
+    case (.eur, .byn):
+        return Exchange.eurToByn.rawValue
+    case (.byn, .usd):
+        return Exchange.bynToUsd.rawValue
+    case (.byn, .eur):
+        return Exchange.bynToEur.rawValue
+    default:
+        return 1
     }
+}
+
+func convertCurrency(amount: Double, from: Currency, to: Currency) -> Double {
+    let exchange = getExchange(from: from, to: to)
     return amount * exchange
 }
 
 
-if let convertedAmount = convertCurrency(amount: 1000, from: .USD, to: .EUR) {
-    print("1000 USD = \(convertedAmount) EUR")
-} else {
-    print("Конвертация невозможна.")
-}
+let convertedAmount = convertCurrency(amount: 1000, from: .usd, to: .eur)
+print("1000 USD = \(convertedAmount) EUR")
 
 // 2. Анализатор результатов экзамена:
 //
@@ -150,27 +163,27 @@ if let convertedAmount = convertCurrency(amount: 1000, from: .USD, to: .EUR) {
 
 
 enum Grades: Int {
-    case A = 90
-    case B = 80
-    case C = 70
-    case D = 60
-    case F = 0
+    case a = 90
+    case b = 80
+    case c = 70
+    case d = 60
+    case f = 0
 }
 
 func letterGrades(score: Int) -> Grades? {
     switch score {
     case 90...100:
-        return .A
+        return .a
     case 80..<90:
-        return .B
+        return .b
     case 70..<80:
-        return .C
+        return .c
     case 60..<70:
-        return .D
+        return .d
     case 0..<60:
-        return .F
+        return .f
     default:
-        return nil //
+        return nil
     }
 }
 
@@ -181,5 +194,6 @@ func printExamResult(name: String, score: Int) -> String {
         return "\(name) получил недопустимый балл: \(score)"
     }
 }
+
 let result1 = printExamResult(name: "Алексей", score: 35)
 print(result1)
